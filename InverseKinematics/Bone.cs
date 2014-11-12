@@ -13,7 +13,7 @@ namespace InverseKinematics
         Texture2D _texture;
         Rectangle _rect;
         public Vector2 Position;
-        float _rotation;
+        public float _rotation;
         Bone _parent;
         public Effector Effector;
 
@@ -29,20 +29,24 @@ namespace InverseKinematics
             _rotation = (float)Math.Atan2(Mouse.GetState().Position.Y - Position.Y, Mouse.GetState().Position.X - Position.X);
         }
 
-        public void Update(GameTime gt)
+        public void Update()
         {
+            
             if (_parent != null)
             {
                 Position = _parent.Effector.Position;
             }
-            Effector.Position = new Vector2(Position.X + ((float)Math.Cos(_rotation) * (_texture.Width - 34)), Position.Y + ((float)Math.Sin(_rotation) * (_texture.Width - 35)));
+            Effector.Position = new Vector2(Position.X + ((float)Math.Cos(_rotation) * (_texture.Width - 34)), Position.Y + ((float)Math.Sin(_rotation) * (_texture.Width - 34)));
             
         }
 
-        public void UpdatePosition()
+        //This is what the assignment said to do but it doesn't actually make any of the bones adjust for when the mouse is inside the bones
+        public void UpdatePosition(Vector2 EndPosition)
         {
             //Effector.Position = new Vector2(Position.X + ((float)Math.Cos(_rotation) * (_texture.Width - 34)), Position.Y + ((float)Math.Sin(_rotation) * (_texture.Width - 35)));
-            _rotation += (float)(Math.Atan2(Mouse.GetState().Position.Y - Position.Y, Mouse.GetState().Position.X - Position.X) - Math.Atan2(Effector.Position.Y - Position.Y, Effector.Position.X - Position.X));
+            _rotation += (float)(Math.Atan2(Mouse.GetState().Position.Y - (Position.Y - (34 * Math.Sin(_rotation))), Mouse.GetState().Position.X - (Position.X - (34 * Math.Cos(_rotation)))) 
+                - Math.Atan2(Effector.Position.Y - (Position.Y - (34 * Math.Sin(_rotation))), Effector.Position.X - (Position.X - (34 * Math.Cos(_rotation)))));
+
         }
 
         public void Draw(SpriteBatch sb)

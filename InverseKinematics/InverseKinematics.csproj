@@ -38,6 +38,7 @@
     <Compile Include="Bone.cs" />
     <Compile Include="Effector.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="IKChain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

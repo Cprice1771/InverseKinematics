@@ -20,7 +20,7 @@ namespace InverseKinematics
         SpriteBatch spriteBatch;
         Texture2D _boneTexture;
         Texture2D _effectorTexture;
-        List<Bone> bones;
+        IKChain bones;
 
         public Game1()
             : base()
@@ -58,7 +58,7 @@ namespace InverseKinematics
             _boneTexture = Content.Load<Texture2D>("arm");
             _effectorTexture = Content.Load<Texture2D>("effector");
 
-            bones = new List<Bone>();
+            bones = new IKChain();
             for (int i = 0; i < 4; i++)
             {
                 if(i != 0)
@@ -87,27 +87,9 @@ namespace InverseKinematics
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            bool done = false;
-
-            for (int i = 0; i < 20; i++)
-            {
-                for (int j = 3; j >= 0 ; j--)
-                {
-                    bones[j].UpdatePosition();
-
-                    for (int k = 3; k >= 0; k--)
-                        bones[k].Update(gameTime);
-
-                    if (Vector2.Distance(bones[0].Effector.Position, new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 10)
-                    {
-                        done = true;
-                        break;
-                    }
-                }
-                
-                if (done)
-                    break;
-            }
+            bones.UpdatePosition();
+            bones.Update();
+            
 
           
         }
@@ -122,8 +104,7 @@ namespace InverseKinematics
 
             spriteBatch.Begin();
 
-            for(int i = 3; i >= 0; i--)
-                bones[i].Draw(spriteBatch);
+            bones.Draw(spriteBatch);
 
             spriteBatch.End();
 
